@@ -1,0 +1,277 @@
+zadanie 1
+
+c.
+	while(1){
+		static unsigned int suiCount = 0;
+		suiCount = (suiCount+1)%2;
+		switch(suiCount){
+			case 0:
+				LedStepLeft();
+				break;
+			case 1:
+				LedStepRight();
+				break;
+		}
+		Delay(250);
+	}
+b.
+	enum LedState{LED_LEFT, LED_RIGHT};
+	enum LedState eLedState = LED_LEFT;
+
+	while(1){
+		switch(eLedState){
+			
+			case LED_LEFT:
+				LedStepLeft();
+				eLedState = LED_RIGHT;
+				break;
+			
+			case LED_RIGHT:
+				LedStepRight();
+				eLedState = LED_LEFT;
+				break;
+		}
+		Delay(250);
+		
+zadanie 2
+
+enum LedState{STATE0, STATE1,STATE2,STATE3,STATE4,STATE5};
+	enum LedState eLedState = STATE0;
+	
+	LedInit();
+	while(1){
+		switch(eLedState){
+			
+			case STATE0:
+				LedStepLeft();
+				eLedState = STATE1;
+				break;
+			
+			case STATE1:
+				LedStepLeft();
+				eLedState = STATE2;
+				break;
+			
+			case STATE2:
+				LedStepLeft();
+				eLedState = STATE3;
+				break;
+			
+			case STATE3:
+				LedStepRight();
+				eLedState = STATE4;
+				break;
+			
+			case STATE4:
+				LedStepRight();
+				eLedState = STATE5;
+				break;
+			
+			case STATE5:
+				LedStepRight();
+				eLedState = STATE0;
+				break;
+		}
+		Delay(250);		
+	}
+
+zadanie 3
+
+	enum Direction{LEFT, RIGHT};
+	enum Direction eDirectionState = LEFT;
+	unsigned char ucCounter;
+
+	LedInit();
+	while(1){
+		switch(eDirectionState){
+			
+			case LEFT:
+				LedStepLeft();
+				if(ucCounter == 3){
+					eDirectionState = RIGHT;
+				}
+				ucCounter =(ucCounter+1)%4;
+				break;
+
+			case RIGHT:
+				LedStepRight();
+				if(ucCounter == 3){
+					eDirectionState = LEFT;
+				}
+				ucCounter =(ucCounter+1)%4;
+				break;
+		}
+		Delay(250);		
+	}
+	
+zadanie 4
+a.
+	enum MovementState{STOP, RIGHT};
+	enum MovementState eMovementState = RIGHT;
+	unsigned char ucCounter;
+
+	LedInit();
+	while(1){
+		switch(eMovementState){
+
+			case RIGHT:
+				if(ucCounter == 3){
+					eMovementState = STOP;
+				}
+				else{
+					LedStepRight();
+					ucCounter =(ucCounter+1)%4;
+				}
+				break;
+			
+			case STOP:
+				break;
+		}	
+	}
+b.
+switch(eMovementState){
+
+			case RIGHT:
+				if(ucCounter == 3){
+					eMovementState = STOP;
+					ucCounter =(ucCounter+1)%4;
+				}
+				else{
+					LedStepRight();
+					ucCounter =(ucCounter+1)%4;
+				}
+				break;
+			
+			case STOP:
+				if(eKeyboardRead() == BUTTON_0){
+					eMovementState=RIGHT;
+				}
+				break;
+		}	
+		//Delay(250);
+	}
+	
+zadanie5
+
+		enum MovementState{STOP, RIGHT};
+	enum MovementState eMovementState = RIGHT;
+
+	LedInit();
+	while(1){
+		switch(eMovementState){
+
+			case RIGHT:
+				if(eKeyboardRead() == BUTTON_0){
+					eMovementState=STOP;
+				}
+				else{
+					LedStepRight();
+					eMovementState=RIGHT;
+				}
+				break;
+			
+			case STOP:
+				if(eKeyboardRead() == BUTTON_1){
+					eMovementState=RIGHT;
+				}
+				else{
+					eMovementState=STOP;
+				}
+				break;
+		}	
+	
+zadanie 6
+	enum MovementState{STOP, LEFT, RIGHT};
+	enum MovementState eMovementState = RIGHT;
+
+	LedInit();
+	while(1){
+		switch(eMovementState){
+
+			case STOP:
+				if(eKeyboardRead() == BUTTON_0){
+					eMovementState=LEFT;
+				}
+				else if(eKeyboardRead() == BUTTON_2){
+					eMovementState=RIGHT;
+				}
+				else{
+					eMovementState=STOP;
+				}
+				break;
+			
+			case RIGHT:
+				if(eKeyboardRead() == BUTTON_1){
+					eMovementState=STOP;
+				}
+				else{
+					LedStepRight();
+					eMovementState=RIGHT;
+				}
+				break;
+				
+			case LEFT:
+				if(eKeyboardRead() == BUTTON_1){
+					eMovementState=STOP;
+				}
+				else{
+					LedStepLeft();
+					eMovementState=LEFT;
+				}
+				
+zadanie 7
+	enum MovementState{STOP, LEFT, RIGHT, WIPER};
+	enum MovementState eMovementState = RIGHT;
+	unsigned char ucCounter;
+
+	LedInit();
+	while(1){
+		switch(eMovementState){
+
+			case STOP:
+				if(eKeyboardRead() == BUTTON_0){
+					eMovementState=LEFT;
+				}
+				else if(eKeyboardRead() == BUTTON_2){
+					eMovementState=RIGHT;
+				}
+				else{
+					eMovementState=STOP;
+				}
+				break;
+			
+			case RIGHT:
+				if(eKeyboardRead() == BUTTON_1){
+					eMovementState=STOP;
+				}
+				else if(eKeyboardRead() == BUTTON_3){
+					eMovementState=WIPER;
+					break;
+				}
+				else{
+					LedStepRight();
+					eMovementState=RIGHT;
+				}
+				break;
+				
+			case LEFT:
+				if(eKeyboardRead() == BUTTON_1){
+					eMovementState=STOP;
+				}
+				else{
+					LedStepLeft();
+					eMovementState=LEFT;
+				}
+				case WIPER:
+					if(ucCounter == 6){
+						eMovementState = LEFT;
+						ucCounter =0;
+						break;
+					}
+					else{
+						LedOn(ucCounter%2);
+						ucCounter++;
+					}
+				
+		}	
+				
