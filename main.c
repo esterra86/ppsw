@@ -1,8 +1,6 @@
-#include <LPC21xx.H>
 #include "led.h"
 #include "keyboard.h"
 
-int a;
 
 void Delay(int a){ 
 	int iCount;
@@ -12,20 +10,61 @@ void Delay(int a){
 }
 
 
-int main(){
+int main(){	
+	enum MovementState{STOP, LEFT, RIGHT, WIPER};
+	enum MovementState eMovementState = RIGHT;
+	unsigned char ucCounter;
+
 	LedInit();
-	KeyboardInit();
 	while(1){
-		Delay(50);
-		switch(a=eKeyboardRead()){
-			case BUTTON_1:
-				LedStepRight();
+		switch(eMovementState){
+
+			case STOP:
+				if(eKeyboardRead() == BUTTON_0){
+					eMovementState=LEFT;
+				}
+				else if(eKeyboardRead() == BUTTON_2){
+					eMovementState=RIGHT;
+				}
+				else{
+					eMovementState=STOP;
+				}
 				break;
-			case BUTTON_2:
-				LedStepLeft();
-			  break;
-			default:;
-		}
+			
+			case RIGHT:
+				if(eKeyboardRead() == BUTTON_1){
+					eMovementState=STOP;
+				}
+				else if(eKeyboardRead()==BUTTON_3){
+					eMovementState = WIPER;
+					}
+				else{
+					LedStepRight();
+					eMovementState=RIGHT;
+				}
+				break;
+				
+			case LEFT:
+				if(eKeyboardRead() == BUTTON_1){
+					eMovementState=STOP;
+				}
+				else{
+					LedStepLeft();
+					eMovementState=LEFT;
+				}
+				break;
+				
+			case WIPER:
+				if(ucCounter == 6){
+						eMovementState = LEFT;
+						ucCounter =0;
+				}
+				else{
+						LedOn(ucCounter%2);
+						ucCounter++;
+				}
+				break;
+			}
+		Delay(100);
 	}
 }
-
