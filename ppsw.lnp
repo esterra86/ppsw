@@ -3,6 +3,7 @@
 ".\keyboard.o"
 ".\led.o"
 ".\main.o"
+".\timer.o"
 --strict --scatter ".\ppsw.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
